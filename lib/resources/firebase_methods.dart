@@ -42,6 +42,7 @@ class FirebaseMethods {
 
   Future<FirebaseUser> signIn() async {
     GoogleSignInAccount _signInAccount = await _googleSignIn.signIn();
+//    GoogleSignInAccount _signInAccount = await _googleSignIn.signInSilently();
     GoogleSignInAuthentication _signInAuthentication =
         await _signInAccount.authentication;
 

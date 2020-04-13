@@ -1,8 +1,10 @@
 import 'package:doc_consult/provider/image_upload_provider.dart';
 import 'package:doc_consult/provider/user_provider.dart';
+import 'package:doc_consult/resources/firebase_repository.dart';
 import 'package:doc_consult/screens/home/home.dart';
 import 'package:doc_consult/screens/login/login.dart';
 import 'package:doc_consult/screens/signup/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -44,6 +46,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     ));
   }
 
+  FirebaseRepository _repository = FirebaseRepository();
+
   @override
   Widget build(BuildContext context) {
     _sysOverlay();
@@ -70,7 +74,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               primaryColorLight: Colors.white,
               primaryColor: Colors.white,
               dialogBackgroundColor: Color(0xaaE090C9)),
-          home: Login()),
+          home: FutureBuilder(
+              future: _repository.getCurrentUser(),
+              builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
+                if (snapshot.hasData) {
+                  return Home();
+                } else {
+                  return Login();
+                }
+              })),
     );
   }
 }
