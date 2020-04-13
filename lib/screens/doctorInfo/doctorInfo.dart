@@ -1,10 +1,13 @@
+import 'package:doc_consult/models/user.dart';
 import 'package:doc_consult/shared/specialityContainer.dart';
 import 'package:doc_consult/theme/lightTheme.dart';
+import 'package:doc_consult/utils/call_utilities.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:doc_consult/screens/doctorInfo/__mockData__.dart';
 import 'dart:async';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:doc_consult/utils/permissions.dart';
 
 class DoctorInfo extends StatefulWidget {
   final dynamic id;
@@ -15,6 +18,8 @@ class DoctorInfo extends StatefulWidget {
   final String imageUrl;
   final int experience;
   final int price;
+  final User sender;
+  final User receiver;
 
   DoctorInfo(
       {Key key,
@@ -25,7 +30,9 @@ class DoctorInfo extends StatefulWidget {
       this.rating,
       this.imageUrl,
       this.experience,
-      this.price})
+      this.price,
+      this.sender,
+      this.receiver})
       : super(key: key);
 
   @override
@@ -160,6 +167,14 @@ class _DoctorInfoState extends State<DoctorInfo>
             bottom: 0,
             child: BlueButton(
               lable: "Connect Now",
+              onPress: () async =>
+                  await Permissions.cameraAndMicrophonePermissionsGranted()
+                      ? CallUtils.dial(
+                          from: widget.sender,
+                          to: widget.receiver,
+                          context: context,
+                        )
+                      : {},
             ),
           )
         ]));
@@ -199,7 +214,9 @@ class BlueButton extends StatelessWidget {
               child: Text(
             "$lable",
             style: TextStyle(
-                color: isOutline ? Colors.blue : Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                color: isOutline ? Colors.blue : Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600),
           )),
           decoration: BoxDecoration(
               color: isOutline ? Colors.white : Colors.blue,

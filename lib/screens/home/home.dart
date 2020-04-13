@@ -1,12 +1,16 @@
+import 'package:doc_consult/provider/user_provider.dart';
 import 'package:doc_consult/screens/blogs/blogSmallList.dart';
+import 'package:doc_consult/screens/callscreens/pickup/pickup_layout.dart';
 import 'package:doc_consult/screens/hospitalList/hospitalSmallList.dart';
 import 'package:doc_consult/screens/support/support.dart';
 import 'package:doc_consult/shared/customDrawer.dart';
 import 'package:doc_consult/theme/lightTheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 ///
 /// #### [Description]
@@ -16,88 +20,110 @@ import 'package:flutter_svg/flutter_svg.dart';
 /// The app will ask for a surety check before exiting the application
 /// which is handled by `WillPopScope` of the scaffold.
 ///
-class Home extends StatelessWidget {
+
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  UserProvider userProvider;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //Refresh the user in the home page after the login, this is called after the login in the home screen after the login.
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.refreshUser();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-      ),
-      drawer: CustomDrawer(),
-      body: WillPopScope(
-        onWillPop: () {
-          SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-            systemNavigationBarColor: Colors.black,
-            systemNavigationBarIconBrightness: Brightness.light,
-          ));
-          return showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  backgroundColor: Colors.white,
-                  title: Text(
-                    "Are you sure you want to exit?",
-                    textAlign: TextAlign.center,
-                  ),
-                  titleTextStyle: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black),
-                  actions: <Widget>[
-                    FlatButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      color: Colors.red,
-                      child: Text("Yes",
-                          style: TextStyle(fontSize: 16, color: Colors.white)),
-                      onPressed: () {
-                        Navigator.of(context).pop(true);
-                      },
+    return PickupLayout(
+      scaffold: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+        ),
+        drawer: CustomDrawer(),
+        body: WillPopScope(
+          onWillPop: () {
+            SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+              systemNavigationBarColor: Colors.black,
+              systemNavigationBarIconBrightness: Brightness.light,
+            ));
+            return showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    backgroundColor: Colors.white,
+                    title: Text(
+                      "Are you sure you want to exit?",
+                      textAlign: TextAlign.center,
                     ),
-                    FlatButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      color: Colors.blue,
-                      child: Text("No",
-                          style: TextStyle(fontSize: 16, color: Colors.white)),
-                      onPressed: () {
-                        SystemChrome.setSystemUIOverlayStyle(
-                            SystemUiOverlayStyle(
-                          systemNavigationBarColor: Colors.white,
-                          systemNavigationBarIconBrightness: Brightness.dark,
-                        ));
-                        Navigator.of(context).pop(false);
-                      },
-                    )
-                  ],
-                );
-              });
-        },
-        child: Container(
-            color: Colors.white,
-            child: ListView(
-              physics: BouncingScrollPhysics(),
-              children: <Widget>[
-                Heading(),
-                SearchTextInput(),
-                CategorySelector(),
-                CategoryOptions(),
-                SizedBox(
-                  height: 40,
-                ),
-                HealthConcernList(),
-                SizedBox(
-                  height: 30,
-                ),
-                SmallHospitalList(),
-                SizedBox(
-                  height: 40,
-                ),
-                SmallBlogList()
-              ],
-            )),
+                    titleTextStyle: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black),
+                    actions: <Widget>[
+                      FlatButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        color: Colors.red,
+                        child: Text("Yes",
+                            style:
+                                TextStyle(fontSize: 16, color: Colors.white)),
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        },
+                      ),
+                      FlatButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        color: Colors.blue,
+                        child: Text("No",
+                            style:
+                                TextStyle(fontSize: 16, color: Colors.white)),
+                        onPressed: () {
+                          SystemChrome.setSystemUIOverlayStyle(
+                              SystemUiOverlayStyle(
+                            systemNavigationBarColor: Colors.white,
+                            systemNavigationBarIconBrightness: Brightness.dark,
+                          ));
+                          Navigator.of(context).pop(false);
+                        },
+                      )
+                    ],
+                  );
+                });
+          },
+          child: Container(
+              color: Colors.white,
+              child: ListView(
+                physics: BouncingScrollPhysics(),
+                children: <Widget>[
+                  Heading(),
+                  SearchTextInput(),
+                  CategorySelector(),
+                  CategoryOptions(),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  HealthConcernList(),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  SmallHospitalList(),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  SmallBlogList()
+                ],
+              )),
+        ),
       ),
     );
   }

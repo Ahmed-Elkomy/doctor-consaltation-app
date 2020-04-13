@@ -1,9 +1,12 @@
+import 'package:doc_consult/provider/image_upload_provider.dart';
+import 'package:doc_consult/provider/user_provider.dart';
 import 'package:doc_consult/screens/home/home.dart';
 import 'package:doc_consult/screens/login/login.dart';
 import 'package:doc_consult/screens/signup/signup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 void main() => (runApp(MyApp()));
 
@@ -44,24 +47,30 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     _sysOverlay();
-    return MaterialApp(
-        routes: {
-          "Login": (context) => Login(),
-          "Home": (context) => Home(),
-          "Signup": (context) => Signup()
-        },
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-            highlightColor: Color.fromRGBO(251, 186, 123, 0.2),
-            splashColor: Colors.transparent,
-            scaffoldBackgroundColor: Colors.white,
-            accentColor: Color.fromRGBO(255, 255, 255, 0.1),
-            hintColor: Colors.black26,
-            cursorColor: Color.fromRGBO(245, 148, 130, 1),
-            primaryColorLight: Colors.white,
-            primaryColor: Colors.white,
-            dialogBackgroundColor: Color(0xaaE090C9)),
-        home: Login());
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ImageUploadProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
+      child: MaterialApp(
+          routes: {
+            "Login": (context) => Login(),
+            "Home": (context) => Home(),
+            "Signup": (context) => Signup()
+          },
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          theme: ThemeData(
+              highlightColor: Color.fromRGBO(251, 186, 123, 0.2),
+              splashColor: Colors.transparent,
+              scaffoldBackgroundColor: Colors.white,
+              accentColor: Color.fromRGBO(255, 255, 255, 0.1),
+              hintColor: Colors.black26,
+              cursorColor: Color.fromRGBO(245, 148, 130, 1),
+              primaryColorLight: Colors.white,
+              primaryColor: Colors.white,
+              dialogBackgroundColor: Color(0xaaE090C9)),
+          home: Login()),
+    );
   }
 }
