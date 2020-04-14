@@ -1,5 +1,7 @@
+import 'package:doc_consult/resources/firebase_repository.dart';
 import 'package:doc_consult/screens/home/home.dart';
 import 'package:doc_consult/shared/input.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,6 +14,14 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+
+  bool isLoading = false;
+  FirebaseRepository _repository = FirebaseRepository();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,15 +58,19 @@ class _SignupState extends State<Signup> {
           ),
           Input(
             placeholder: "Email",
+            controller: emailController,
           ),
           Input(
             placeholder: "Username",
+            controller: usernameController,
           ),
           Input(
             placeholder: "Password",
+            controller: passwordController,
           ),
           Input(
             placeholder: "Confirm Password",
+            controller: confirmPasswordController,
           ),
           SizedBox(
             height: 10,
@@ -64,8 +78,7 @@ class _SignupState extends State<Signup> {
           Center(
             child: RaisedButton(
               onPressed: () {
-                // Signup logic and then go to home.
-                Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (context)=>Home()));
+                performSignUp();
               },
               child: Text(
                 "Sign Up",
@@ -96,13 +109,16 @@ class _SignupState extends State<Signup> {
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: InkWell(
-                  onTap: (){
+                  onTap: () {
                     Navigator.of(context).pop();
                   },
                   highlightColor: Colors.transparent,
                   child: Text(
                     "Login",
-                    style: TextStyle(fontWeight: FontWeight.w700,fontSize: 16, color: Colors.red[300]),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                        color: Colors.red[300]),
                   ),
                 ),
               )
@@ -111,5 +127,63 @@ class _SignupState extends State<Signup> {
         ],
       ),
     );
+  }
+
+  void performSignUp() {
+    print("tring to perform singup");
+    print("AEK:" + usernameController.text);
+    print("AEK:" + passwordController.text);
+    print("AEK:" + emailController.text);
+    print("AEK:" + confirmPasswordController.text);
+
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      _repository
+          .createUserWithEmailAndPassword(
+              email: "ahmed.elkomy87@gmail.com", password: "123456")
+//                email: emailController.text, passwprd: passwordController.text)
+          .then((FirebaseUser user) async {
+        if (user != null) {
+          print("user created successfully");
+          await authenticateUser(user);
+          Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(builder: (context) => Home()));
+        } else {
+          print("There was an error");
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> authenticateUser(FirebaseUser user) async {
+    await _repository.authenticateUser(user).then((isNewUser) async {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (isNewUser) {
+        UserUpdateInfo info = UserUpdateInfo();
+//        info.displayName = usernameController.text;
+        info.displayName = "Ahned Elkomy";
+        info.photoUrl = "";
+        user.updateProfile(info);
+//        _repository.addDataToDb(user,usernameController.text).then((value) {
+        _repository.addDataToDb(user, "Ahned Elkomy").then((value) {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) {
+            return Home();
+          }));
+        });
+      } else {
+//        Navigator.pushReplacement(context,
+//            MaterialPageRoute(builder: (context) {
+//          return Home();
+//        }));
+      }
+    });
   }
 }

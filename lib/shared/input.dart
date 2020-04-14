@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 
 /// Input Class that renders an Input Text field.
 /// Takes in a `placeholder` to label the field.
-class Input extends StatelessWidget {
+class Input extends StatefulWidget {
   final String placeholder;
+  final TextEditingController controller;
 
-  const Input({
-    Key key,
-    this.placeholder,
-  }) : super(key: key);
+  const Input({Key key, this.placeholder, this.controller}) : super(key: key);
 
+  @override
+  _InputState createState() => _InputState();
+}
+
+class _InputState extends State<Input> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,16 +24,17 @@ class Input extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: TextField(
-        onChanged: (String value) {
-          print(value);
-        },
+        controller: widget.controller,
+//        onChanged: (String value) {
+//          print(value);
+//        },
         autocorrect: false,
         cursorColor: Colors.red,
         style: TextStyle(fontSize: 16.0),
         textCapitalization: TextCapitalization.none,
         decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: placeholder,
+            hintText: widget.placeholder,
             contentPadding: EdgeInsets.all(10.0)),
       ),
     );

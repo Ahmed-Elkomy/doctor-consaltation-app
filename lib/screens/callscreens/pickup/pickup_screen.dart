@@ -20,7 +20,7 @@ class PickupScreen extends StatelessWidget {
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(vertical: 100),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+//          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
               "Incoming...",
@@ -29,11 +29,11 @@ class PickupScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 50),
-            CachedImage(
-              call.callerPic,
-              isRound: true,
-              radius: 180,
-            ),
+//            CachedImage(
+//              call.callerPic,
+//              isRound: true,
+//              radius: 180,
+//            ),
             SizedBox(height: 15),
             Text(
               call.callerName,

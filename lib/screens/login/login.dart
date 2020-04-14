@@ -16,8 +16,12 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   bool isLoading = false;
   FirebaseRepository _repository = FirebaseRepository();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,9 +60,11 @@ class _LoginState extends State<Login> {
             ),
             Input(
               placeholder: "Username or Email",
+              controller: usernameController,
             ),
             Input(
               placeholder: "Password",
+              controller: passwordController,
             ),
             Padding(
               padding: EdgeInsets.only(top: 10, right: 10),
@@ -80,8 +86,7 @@ class _LoginState extends State<Login> {
             Center(
               child: RaisedButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                      CupertinoPageRoute(builder: (context) => Home()));
+                  performLogin();
                 },
                 child: Text(
                   "Let Me In",
@@ -124,7 +129,7 @@ class _LoginState extends State<Login> {
               children: <Widget>[
                 InkWell(
                   highlightColor: Colors.transparent,
-                  onTap: performLogin,
+                  onTap: () {},
                   child: SvgPicture.asset(
                     "lib/assets/svg/google.svg",
                     height: 30,
@@ -184,42 +189,54 @@ class _LoginState extends State<Login> {
   }
 
   void performLogin() {
+    print(usernameController.text + ":AEK");
     print("tring to perform login");
 
     setState(() {
       isLoading = true;
     });
 
-    _repository.signIn().then((FirebaseUser user) {
+    _repository
+        .authenticateUserWithEmailAndPassword(
+            email: usernameController.text, password: passwordController.text)
+        .then((FirebaseUser user) {
+      setState(() {
+        isLoading = false;
+      });
       if (user != null) {
-        authenticateUser(user);
+        print("user auhtenticates successfully");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return Home();
+        }));
+//          authenticateUser(user);
       } else {
         print("There was an error");
       }
     });
   }
 
-  void authenticateUser(FirebaseUser user) {
-    _repository.authenticateUser(user).then((isNewUser) {
-      setState(() {
-        isLoading = false;
-      });
-
-      if (isNewUser) {
-        _repository.addDataToDb(user).then((value) {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) {
-            return Home();
-          }));
-        });
-      } else {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) {
-          return Home();
-        }));
-      }
-    });
-  }
+//  void authenticateUser(FirebaseUser user) {
+//    _repository.authenticateUser(user).then((isNewUser) {
+//      setState(() {
+//        isLoading = false;
+//      });
+//
+//      if (isNewUser) {
+//        _repository.addDataToDb(user).then((value) {
+//          Navigator.pushReplacement(context,
+//              MaterialPageRoute(builder: (context) {
+//            return Home();
+//          }));
+//        });
+//      } else {
+//        Navigator.pushReplacement(context,
+//            MaterialPageRoute(builder: (context) {
+//          return Home();
+//        }));
+//      }
+//    });
+//  }
 }
 
 class Logo extends StatelessWidget {

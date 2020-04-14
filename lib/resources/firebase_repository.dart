@@ -15,13 +15,21 @@ class FirebaseRepository {
 
   Future<FirebaseUser> signIn() => _firebaseMethods.signIn();
 
+  Future<FirebaseUser> createUserWithEmailAndPassword(
+          {String email, String password}) =>
+      _firebaseMethods.createUserWithEmailAndPassword(email, password);
+
+  Future<FirebaseUser> authenticateUserWithEmailAndPassword(
+          {String email, String password}) =>
+      _firebaseMethods.authenticateUserWithEmailAndPassword(email, password);
+
   Future<User> getUserDetails() => _firebaseMethods.getUserDetails();
 
   Future<bool> authenticateUser(FirebaseUser user) =>
       _firebaseMethods.authenticateUser(user);
 
-  Future<void> addDataToDb(FirebaseUser user) =>
-      _firebaseMethods.addDataToDb(user);
+  Future<void> addDataToDb(FirebaseUser user, String username) =>
+      _firebaseMethods.addDataToDb(user, username);
 
   ///responsible for signing out
   Future<void> signOut() => _firebaseMethods.signOut();

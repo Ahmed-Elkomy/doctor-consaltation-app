@@ -1,4 +1,5 @@
 import 'package:doc_consult/models/user.dart';
+import 'package:doc_consult/resources/firebase_repository.dart';
 import 'package:doc_consult/shared/specialityContainer.dart';
 import 'package:doc_consult/theme/lightTheme.dart';
 import 'package:doc_consult/utils/call_utilities.dart';
@@ -18,22 +19,18 @@ class DoctorInfo extends StatefulWidget {
   final String imageUrl;
   final int experience;
   final int price;
-  final User sender;
-  final User receiver;
 
-  DoctorInfo(
-      {Key key,
-      @required this.id,
-      this.name,
-      this.address,
-      this.speciality,
-      this.rating,
-      this.imageUrl,
-      this.experience,
-      this.price,
-      this.sender,
-      this.receiver})
-      : super(key: key);
+  DoctorInfo({
+    Key key,
+    @required this.id,
+    this.name,
+    this.address,
+    this.speciality,
+    this.rating,
+    this.imageUrl,
+    this.experience,
+    this.price,
+  }) : super(key: key);
 
   @override
   _DoctorInfoState createState() => _DoctorInfoState();
@@ -48,6 +45,17 @@ class _DoctorInfoState extends State<DoctorInfo>
   }
 
   final Future<Map<String, dynamic>> doctorInfo = getData();
+  User sender;
+  User receiver;
+  FirebaseRepository _repository = FirebaseRepository();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //Todo Remove the sender and receiver initialization
+    initializeSenderReceiver();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -170,14 +178,30 @@ class _DoctorInfoState extends State<DoctorInfo>
               onPress: () async =>
                   await Permissions.cameraAndMicrophonePermissionsGranted()
                       ? CallUtils.dial(
-                          from: widget.sender,
-                          to: widget.receiver,
+                          from: sender,
+                          to: receiver,
                           context: context,
                         )
                       : {},
             ),
           )
         ]));
+  }
+
+  void initializeSenderReceiver() {
+    _repository.getCurrentUser().then((user) {
+      print(user.displayName);
+      sender = User(
+        uid: user.uid,
+        name: user.displayName,
+        profilePhoto: user.photoUrl,
+      );
+    });
+
+    receiver = User(
+        uid: "BJxMSTUz34bPd6qrP8x8B3IRv4H3",
+        name: "Doctor Ahmed",
+        profilePhoto: "");
   }
 }
 
@@ -385,6 +409,7 @@ class ReviewRowContainer extends StatelessWidget {
 
 class AboutContainer extends StatelessWidget {
   final String data;
+
   const AboutContainer({
     Key key,
     this.data,
@@ -419,6 +444,7 @@ class AboutContainer extends StatelessWidget {
 class RowItem extends StatelessWidget {
   final String lable;
   final dynamic value;
+
   const RowItem({Key key, this.lable, this.value}) : super(key: key);
 
   @override

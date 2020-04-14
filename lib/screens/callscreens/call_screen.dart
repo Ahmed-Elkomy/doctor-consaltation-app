@@ -55,7 +55,6 @@ class _CallScreenState extends State<CallScreen> {
     await AgoraRtcEngine.setParameters(
         '''{\"che.video.lowBitRateStreamParameter\":{\"width\":320,\"height\":180,\"frameRate\":15,\"bitRate\":140}}''');
     await AgoraRtcEngine.joinChannel(null, widget.call.channelId, null, 0);
-    
   }
 
   addPostFrameCallback() {
@@ -300,6 +299,7 @@ class _CallScreenState extends State<CallScreen> {
 
   void _onSwitchCamera() {
     AgoraRtcEngine.switchCamera();
+    print("Camera Switched On");
   }
 
   /// Toolbar layout

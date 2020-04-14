@@ -22,8 +22,26 @@ class FirebaseMethods {
 
   StorageReference _storageReference;
 
+  //my classes
+
   //user class
   User user = User();
+
+  Future<FirebaseUser> createUserWithEmailAndPassword(
+      String email, String password) async {
+    FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
+            email: email, password: password))
+        .user;
+    return user;
+  }
+
+  Future<FirebaseUser> authenticateUserWithEmailAndPassword(
+      String email, String password) async {
+    FirebaseUser user = (await _auth.signInWithEmailAndPassword(
+            email: email, password: password))
+        .user;
+    return user;
+  }
 
   Future<FirebaseUser> getCurrentUser() async {
     FirebaseUser currentUser;
@@ -50,9 +68,9 @@ class FirebaseMethods {
         accessToken: _signInAuthentication.accessToken,
         idToken: _signInAuthentication.idToken);
 
-    FirebaseUser user = await _auth.signInWithCredential(credential);
+//    FirebaseUser user = await _auth.signInWithCredential(credential);
     //after upgrading the plugin
-//    FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+    FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
 
     return user;
   }
@@ -69,7 +87,14 @@ class FirebaseMethods {
     return docs.length == 0 ? true : false;
   }
 
-  Future<void> addDataToDb(FirebaseUser currentUser) async {
+  Future<void> addDataToDb(FirebaseUser currentUser, String displayName) async {
+    UserUpdateInfo info = UserUpdateInfo();
+    info.displayName = displayName;
+    info.photoUrl = "";
+    await _auth.currentUser().then((user) {
+      user.updateProfile(info);
+      currentUser = user;
+    });
     String username = Utils.getUsername(currentUser.email);
 
     user = User(

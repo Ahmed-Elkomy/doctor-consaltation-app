@@ -74,15 +74,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               primaryColorLight: Colors.white,
               primaryColor: Colors.white,
               dialogBackgroundColor: Color(0xaaE090C9)),
-          home: FutureBuilder(
-              future: _repository.getCurrentUser(),
-              builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-                if (snapshot.hasData) {
-                  return Home();
-                } else {
-                  return Login();
-                }
-              })),
+          home: Login()
+//          FutureBuilder(
+////              future: _repository.getCurrentUser(),
+////              builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
+////                if (snapshot.hasData) {
+////                  return Home();
+////                } else {
+////                  return Login();
+////                }
+////              })
+          ),
     );
   }
 }
