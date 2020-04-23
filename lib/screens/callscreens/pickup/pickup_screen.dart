@@ -4,6 +4,7 @@ import 'package:doc_consult/resources/call_methods.dart';
 import 'package:doc_consult/screens/callscreens/call_screen.dart';
 import 'package:doc_consult/screens/chatscreens/widgets/cached_image.dart';
 import 'package:doc_consult/utils/permissions.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 class PickupScreen extends StatelessWidget {
   final Call call;
@@ -21,6 +22,7 @@ class PickupScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 100),
         child: Column(
 //          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
               "Incoming...",
@@ -28,13 +30,13 @@ class PickupScreen extends StatelessWidget {
                 fontSize: 30,
               ),
             ),
-            SizedBox(height: 50),
+//            SizedBox(height: 50),
 //            CachedImage(
 //              call.callerPic,
 //              isRound: true,
 //              radius: 180,
 //            ),
-            SizedBox(height: 15),
+//            SizedBox(height: 15),
             Text(
               call.callerName,
               style: TextStyle(
@@ -42,9 +44,9 @@ class PickupScreen extends StatelessWidget {
                 fontSize: 20,
               ),
             ),
-            SizedBox(height: 75),
+//            Expanded(child: SizedBox(height: 75)),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 IconButton(
                   icon: Icon(Icons.call_end),
@@ -57,15 +59,18 @@ class PickupScreen extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.call),
                   color: Colors.green,
-                  onPressed: () async =>
-                      await Permissions.cameraAndMicrophonePermissionsGranted()
-                          ? Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CallScreen(call: call),
-                              ),
-                            )
-                          : {},
+                  onPressed: () async {
+                    if (await Permissions
+                        .cameraAndMicrophonePermissionsGranted()) {
+                      await callMethods.startCall(call: call);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CallScreen(call: call),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ],
             ),

@@ -1,3 +1,4 @@
+import 'package:doc_consult/constants/strings.dart';
 import 'package:doc_consult/models/user.dart';
 import 'package:doc_consult/resources/firebase_repository.dart';
 import 'package:doc_consult/shared/specialityContainer.dart';
@@ -19,6 +20,7 @@ class DoctorInfo extends StatefulWidget {
   final String imageUrl;
   final int experience;
   final int price;
+  final CALL_TYPE callType;
 
   DoctorInfo({
     Key key,
@@ -30,6 +32,7 @@ class DoctorInfo extends StatefulWidget {
     this.imageUrl,
     this.experience,
     this.price,
+    this.callType,
   }) : super(key: key);
 
   @override
@@ -59,6 +62,7 @@ class _DoctorInfoState extends State<DoctorInfo>
 
   @override
   Widget build(BuildContext context) {
+    print(widget.callType);
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -181,6 +185,7 @@ class _DoctorInfoState extends State<DoctorInfo>
                           from: sender,
                           to: receiver,
                           context: context,
+                          callType: widget.callType,
                         )
                       : {},
             ),

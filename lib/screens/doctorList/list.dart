@@ -1,3 +1,4 @@
+import 'package:doc_consult/constants/strings.dart';
 import 'package:doc_consult/screens/doctorInfo/doctorInfo.dart';
 import 'package:doc_consult/shared/specialityContainer.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,6 +24,9 @@ Future<List<Map<String, dynamic>>> getDoctorList() async {
 /// format ( call, message, video call, etc ).
 ///
 class DoctorsList extends StatelessWidget {
+  final CALL_TYPE callType;
+  DoctorsList({this.callType});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +34,9 @@ class DoctorsList extends StatelessWidget {
         title: Text("Doctors List"),
         elevation: 0,
       ),
-      body: ListContainer(),
+      body: ListContainer(
+        callType: callType,
+      ),
     );
   }
 }
@@ -43,6 +49,8 @@ class DoctorsList extends StatelessWidget {
 /// show the list when the Future is complete.
 ///
 class ListContainer extends StatefulWidget {
+  final CALL_TYPE callType;
+  ListContainer({this.callType});
   @override
   _ListContainerState createState() => _ListContainerState();
 }
@@ -103,6 +111,7 @@ class _ListContainerState extends State<ListContainer>
                                           ['experience'],
                                       price: snapshot.data[index]['price'],
                                       rating: snapshot.data[index]['rating'],
+                                      callType: widget.callType,
                                     )));
                           },
                           child: DoctorListItem(

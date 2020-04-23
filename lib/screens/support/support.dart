@@ -1,3 +1,4 @@
+import 'package:doc_consult/constants/strings.dart';
 import 'package:doc_consult/screens/doctorList/list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,7 @@ class Support extends StatelessWidget {
                   height: 40,
                 ),
                 ChoiceContainer(
+                  callType: CALL_TYPE.chat,
                   heading: "Chat",
                   subHeading:
                       "\nWhen you are busy to talk you should pick this option",
@@ -52,6 +54,7 @@ class Support extends StatelessWidget {
                   color: Color(0xFF9ECEF9),
                 ),
                 ChoiceContainer(
+                  callType: CALL_TYPE.voice,
                   heading: "Call",
                   subHeading: "\nTalk to a doctor on the voice call",
                   icon: SvgPicture.asset(
@@ -61,6 +64,7 @@ class Support extends StatelessWidget {
                   color: Color(0xFF9ECEF9),
                 ),
                 ChoiceContainer(
+                  callType: CALL_TYPE.video,
                   heading: "Video Call",
                   subHeading: "\nTalk to a doctor in a video call",
                   icon: SvgPicture.asset(
@@ -112,18 +116,23 @@ class ChoiceContainer extends StatelessWidget {
     @required this.subHeading,
     @required this.icon,
     @required this.color,
+    @required this.callType,
   }) : super(key: key);
 
   final String heading;
   final String subHeading;
   final Widget icon;
   final Color color;
+  final CALL_TYPE callType;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) => DoctorsList()));
+        Navigator.of(context).push(CupertinoPageRoute(
+            builder: (BuildContext context) => DoctorsList(
+                  callType: callType,
+                )));
       },
       child: Container(
         padding: EdgeInsets.only(left: 12, top: 12, right: 30, bottom: 12),
@@ -173,7 +182,6 @@ class ChoiceContainer extends StatelessWidget {
     );
   }
 }
-
 
 class Header extends StatelessWidget {
   final String assetUrl;

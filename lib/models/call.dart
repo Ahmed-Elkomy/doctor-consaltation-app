@@ -1,3 +1,5 @@
+import 'package:doc_consult/constants/strings.dart';
+
 class Call {
   String callerId;
   String callerName;
@@ -7,6 +9,8 @@ class Call {
   String receiverPic;
   String channelId;
   bool hasDialled;
+  bool hasStarted;
+  CALL_TYPE callType;
 
   Call({
     this.callerId,
@@ -17,6 +21,8 @@ class Call {
     this.receiverPic,
     this.channelId,
     this.hasDialled,
+    this.hasStarted,
+    this.callType,
   });
 
   // to map
@@ -30,6 +36,8 @@ class Call {
     callMap["receiver_pic"] = call.receiverPic;
     callMap["channel_id"] = call.channelId;
     callMap["has_dialled"] = call.hasDialled;
+    callMap["has_started"] = call.hasStarted;
+    callMap["call_type"] = call.callType.toString();
     return callMap;
   }
 
@@ -42,5 +50,16 @@ class Call {
     this.receiverPic = callMap["receiver_pic"];
     this.channelId = callMap["channel_id"];
     this.hasDialled = callMap["has_dialled"];
+    this.hasStarted = callMap["has_started"];
+    this.callType = getCallTypeFromString(callMap["call_type"]);
+  }
+  CALL_TYPE getCallTypeFromString(String callType) {
+    if (callType == "CALL_TYPE.chat") {
+      return CALL_TYPE.chat;
+    } else if (callType == "CALL_TYPE.voice") {
+      return CALL_TYPE.voice;
+    } else {
+      return CALL_TYPE.video;
+    }
   }
 }

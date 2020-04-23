@@ -40,6 +40,7 @@ dependencies:
   emoji_picker: ^0.1.0
   cached_network_image: ^2.0.0
   modal_progress_hud: ^0.1.3
+  flutter_ringtone_player: ^2.0.0
   #latest version from the plugins
 #  permission_handler: ^5.0.0+hotfix.3
 #  agora_rtc_engine: ^1.0.8

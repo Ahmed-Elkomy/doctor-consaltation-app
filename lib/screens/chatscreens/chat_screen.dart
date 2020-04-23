@@ -475,6 +475,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       from: sender,
                       to: widget.receiver,
                       context: context,
+                      callType: CALL_TYPE.video,
                     )
                   : {},
         ),
@@ -482,7 +483,15 @@ class _ChatScreenState extends State<ChatScreen> {
           icon: Icon(
             Icons.phone,
           ),
-          onPressed: () {},
+          onPressed: () async =>
+              await Permissions.cameraAndMicrophonePermissionsGranted()
+                  ? CallUtils.dial(
+                      from: sender,
+                      to: widget.receiver,
+                      context: context,
+                      callType: CALL_TYPE.voice,
+                    )
+                  : {},
         )
       ],
     );

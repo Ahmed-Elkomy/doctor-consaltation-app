@@ -142,8 +142,7 @@ class _SignupState extends State<Signup> {
     try {
       _repository
           .createUserWithEmailAndPassword(
-              email: "ahmed.elkomy87@gmail.com", password: "123456")
-//                email: emailController.text, passwprd: passwordController.text)
+              email: emailController.text, password: passwordController.text)
           .then((FirebaseUser user) async {
         if (user != null) {
           print("user created successfully");
@@ -167,12 +166,10 @@ class _SignupState extends State<Signup> {
 
       if (isNewUser) {
         UserUpdateInfo info = UserUpdateInfo();
-//        info.displayName = usernameController.text;
-        info.displayName = "Ahned Elkomy";
+        info.displayName = usernameController.text;
         info.photoUrl = "";
         user.updateProfile(info);
-//        _repository.addDataToDb(user,usernameController.text).then((value) {
-        _repository.addDataToDb(user, "Ahned Elkomy").then((value) {
+        _repository.addDataToDb(user, usernameController.text).then((value) {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) {
             return Home();

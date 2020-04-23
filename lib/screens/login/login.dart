@@ -195,48 +195,36 @@ class _LoginState extends State<Login> {
     setState(() {
       isLoading = true;
     });
-
-    _repository
-        .authenticateUserWithEmailAndPassword(
-            email: usernameController.text, password: passwordController.text)
-        .then((FirebaseUser user) {
+    try {
+      _repository
+          .authenticateUserWithEmailAndPassword(
+              email: usernameController.text, password: passwordController.text)
+          .then((FirebaseUser user) {
+        setState(() {
+          isLoading = false;
+        });
+        if (user != null) {
+          print("user auhtenticates successfully");
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) {
+            return Home();
+          }));
+//          authenticateUser(user);
+        } else {
+          print("There was an error");
+        }
+      });
+    } catch (e) {
+      print(e);
       setState(() {
         isLoading = false;
       });
-      if (user != null) {
-        print("user auhtenticates successfully");
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) {
-          return Home();
-        }));
-//          authenticateUser(user);
-      } else {
-        print("There was an error");
-      }
-    });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
-
-//  void authenticateUser(FirebaseUser user) {
-//    _repository.authenticateUser(user).then((isNewUser) {
-//      setState(() {
-//        isLoading = false;
-//      });
-//
-//      if (isNewUser) {
-//        _repository.addDataToDb(user).then((value) {
-//          Navigator.pushReplacement(context,
-//              MaterialPageRoute(builder: (context) {
-//            return Home();
-//          }));
-//        });
-//      } else {
-//        Navigator.pushReplacement(context,
-//            MaterialPageRoute(builder: (context) {
-//          return Home();
-//        }));
-//      }
-//    });
-//  }
 }
 
 class Logo extends StatelessWidget {
